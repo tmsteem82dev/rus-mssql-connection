@@ -47,7 +47,7 @@ fn execute_statement<'env>(conn: &Connection<'env, AutocommitOn>) -> Result<()> 
     let start = Instant::now();
     let stmt = Statement::with_parent(conn)?;
 
-    let sql_text = String::from("SELECT * FROM locations order by city");
+    let sql_text = String::from("SELECT COUNT (*) FROM locations");
     let mut rowcount = 0;
 
     match stmt.exec_direct(&sql_text)? {
@@ -55,7 +55,7 @@ fn execute_statement<'env>(conn: &Connection<'env, AutocommitOn>) -> Result<()> 
             let cols = stmt.num_result_cols()?;
             while let Some(mut cursor) = stmt.fetch()? {
                 rowcount += 1;
-                for i in 2..(cols + 1) {
+                for i in 1..(cols + 1) {
                     match cursor.get_data::<&str>(i as u16)? {
                         Some(val) => print!(" {}", val),
                         None => print!(" NULL"),
